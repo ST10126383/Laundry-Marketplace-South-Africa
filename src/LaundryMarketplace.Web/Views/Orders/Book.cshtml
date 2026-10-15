@@ -1,0 +1,72 @@
+@{
+    ViewData["Title"] = "Book Laundry";
+}
+
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0">Book Laundry Service</h4>
+            </div>
+            <div class="card-body">
+                <form asp-action="Book" method="post">
+                    @Html.AntiForgeryToken()
+                    <div asp-validation-summary="All" class="text-danger mb-3"></div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Service Type</label>
+                        <select name="serviceType" class="form-select" required>
+                            <option value="">-- Select service --</option>
+                            <option value="Wash & Fold">Wash &amp; Fold (R45 / kg)</option>
+                            <option value="Dry Clean">Dry Clean (R80 / item)</option>
+                            <option value="Ironing Only">Ironing Only (R25 / item)</option>
+                            <option value="Wash, Dry & Iron">Wash, Dry &amp; Iron (R65 / kg)</option>
+                        </select>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-semibold">Price (R)</label>
+                            <input type="number" name="price" class="form-control" step="0.01" min="1" required placeholder="e.g. 120.00" />
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-semibold">Estimated Weight (kg)</label>
+                            <input type="number" name="weightKg" class="form-control" step="0.1" min="0.1" value="5" required />
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Pickup Address</label>
+                        <input type="text" name="pickupAddress" class="form-control" placeholder="Street, Suburb, City" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Delivery Address</label>
+                        <input type="text" name="deliveryAddress" class="form-control" placeholder="Leave blank if same as pickup" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Special Instructions</label>
+                        <textarea name="specialInstructions" class="form-control" rows="2"></textarea>
+                    </div>
+
+                    <hr />
+                    <h5 class="text-success">Optional Clothing Donation</h5>
+                    <p class="text-muted small">Add a bag of clothing to support True People's Dignity Foundation at no extra cost.</p>
+
+                    <div class="form-check mb-2">
+                        <input class="form-check-input" type="checkbox" name="includeDonation" value="true" id="includeDonation" onchange="document.getElementById('donationWeight').disabled = !this.checked" />
+                        <label class="form-check-label" for="includeDonation">I want to donate clothing with this order</label>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Donation Weight (kg)</label>
+                        <input type="number" name="donationWeightKg" id="donationWeight" class="form-control" step="0.1" min="0.5" disabled placeholder="e.g. 3.5" />
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-lg w-100">Confirm Booking</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

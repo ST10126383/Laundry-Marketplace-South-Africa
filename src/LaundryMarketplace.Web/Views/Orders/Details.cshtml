@@ -1,0 +1,53 @@
+@model LaundryMarketplace.Core.Entities.Order
+@{
+    ViewData["Title"] = $"Order #{Model.OrderId}";
+}
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success">@TempData["Success"]</div>
+}
+
+<div class="card shadow">
+    <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+        <h4 class="mb-0">Order #@Model.OrderId</h4>
+        <span class="badge bg-light text-dark fs-6">@Model.OrderStatus</span>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-6">
+                <p><strong>Date:</strong> @Model.OrderDate.ToLocalTime().ToString("dd MMM yyyy HH:mm")</p>
+                <p><strong>Pickup:</strong> @(Model.PickupAddress ?? "—")</p>
+                <p><strong>Delivery:</strong> @(Model.DeliveryAddress ?? "—")</p>
+                <p><strong>Instructions:</strong> @(Model.SpecialInstructions ?? "None")</p>
+            </div>
+            <div class="col-md-6">
+                <p><strong>Total Amount:</strong> R @Model.TotalAmount.ToString("N2")</p>
+                <p><strong>Platform Commission:</strong> R @Model.CommissionAmount.ToString("N2")</p>
+                <p class="text-success"><strong>NPO Allocation (10%):</strong> R @Model.NpoAllocationAmount.ToString("N2")</p>
+            </div>
+        </div>
+
+        <h5 class="mt-4">Items</h5>
+        <ul class="list-group mb-3">
+            @foreach (var item in Model.OrderItems)
+            {
+                <li class="list-group-item d-flex justify-content-between">
+                    <span>@item.ServiceType (@item.WeightKg kg)</span>
+                    <span>R @item.Price.ToString("N2")</span>
+                </li>
+            }
+        </ul>
+
+        @if (Model.Donation != null)
+        {
+            <div class="alert alert-success">
+                <strong>Donation included:</strong> @Model.Donation.WeightKg kg of @Model.Donation.ItemCategory 
+                (Status: @Model.Donation.ConditionStatus)
+            </div>
+        }
+
+        <a class="btn btn-outline-primary" asp-action="MyOrders">Back to My Orders</a>
+        <a class="btn btn-outline-secondary" asp-action="Track" asp-route-id="@Model.OrderId">Track Status</a>
+    </div>
+</div>

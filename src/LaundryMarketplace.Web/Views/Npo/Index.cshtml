@@ -1,0 +1,79 @@
+@model IEnumerable<LaundryMarketplace.Core.Entities.NpoFundLedger>
+@{
+    ViewData["Title"] = "NPO Dashboard";
+}
+
+<h2 class="mb-4">True People's Dignity Foundation – Admin Dashboard</h2>
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success">@TempData["Success"]</div>
+}
+
+<div class="row g-3 mb-4">
+    <div class="col-md-3">
+        <div class="card text-center border-success h-100">
+            <div class="card-body">
+                <h3 class="text-success">R @(((decimal)ViewBag.Balance).ToString("N2"))</h3>
+                <p class="mb-0">Current NPO Balance</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-center border-primary h-100">
+            <div class="card-body">
+                <h3 class="text-primary">@ViewBag.TotalDonations</h3>
+                <p class="mb-0">Total Donations</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-center border-info h-100">
+            <div class="card-body">
+                <h3 class="text-info">@($"{ViewBag.TotalWeightKg:N1}") kg</h3>
+                <p class="mb-0">Clothes Collected</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-center border-warning h-100">
+            <div class="card-body">
+                <h3 class="text-warning">@ViewBag.UniformsProcured</h3>
+                <p class="mb-0">Uniforms Procured</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="d-flex gap-2 mb-4">
+    <a class="btn btn-primary" asp-action="Ledger">Full Ledger</a>
+    <a class="btn btn-success" asp-action="Procurements">Procurements</a>
+    <a class="btn btn-outline-success" asp-action="CreateProcurement">+ New Procurement</a>
+</div>
+
+<h5>Recent Fund Transactions</h5>
+<div class="table-responsive">
+    <table class="table table-sm table-striped">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Type</th>
+                <th>Amount</th>
+                <th>Balance After</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var e in Model)
+            {
+                <tr>
+                    <td>@e.TransactionDate.ToLocalTime().ToString("dd MMM HH:mm")</td>
+                    <td><span class="badge bg-@(e.TransactionType == "Allocation" ? "success" : "warning")">@e.TransactionType</span></td>
+                    <td class="@(e.AllocationAmount >= 0 ? "text-success" : "text-danger")">R @e.AllocationAmount.ToString("N2")</td>
+                    <td>R @e.BalanceAfter.ToString("N2")</td>
+                    <td>@e.Description</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

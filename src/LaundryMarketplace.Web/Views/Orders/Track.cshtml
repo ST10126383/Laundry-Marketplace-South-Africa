@@ -1,0 +1,43 @@
+@model LaundryMarketplace.Core.Entities.Order
+@{
+    ViewData["Title"] = $"Track Order #{Model.OrderId}";
+}
+
+<div class="card shadow">
+    <div class="card-header bg-info text-white">
+        <h4 class="mb-0">Tracking Order #@Model.OrderId</h4>
+    </div>
+    <div class="card-body">
+        <div class="progress mb-4" style="height: 30px;">
+            @{
+                var progress = Model.OrderStatus switch
+                {
+                    OrderStatus.Pending => 10,
+                    OrderStatus.PickedUp => 30,
+                    OrderStatus.InWash => 50,
+                    OrderStatus.Ready => 70,
+                    OrderStatus.Dispatched => 85,
+                    OrderStatus.Delivered => 100,
+                    _ => 0
+                };
+            }
+            <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: @progress%">
+                @Model.OrderStatus
+            </div>
+        </div>
+
+        <ul class="list-group list-group-horizontal-md flex-fill text-center mb-4">
+            @foreach (OrderStatus s in Enum.GetValues(typeof(OrderStatus)))
+            {
+                if (s == OrderStatus.Cancelled) continue;
+                var active = (int)Model.OrderStatus >= (int)s;
+                <li class="list-group-item flex-fill @(active ? "list-group-item-success" : "")">
+                    @s
+                </li>
+            }
+        </ul>
+
+        <p><strong>Last updated:</strong> @(Model.UpdatedAt?.ToLocalTime().ToString("dd MMM yyyy HH:mm") ?? Model.OrderDate.ToLocalTime().ToString("dd MMM yyyy HH:mm"))</p>
+        <a class="btn btn-outline-primary" asp-action="Details" asp-route-id="@Model.OrderId">View Full Details</a>
+    </div>
+</div>

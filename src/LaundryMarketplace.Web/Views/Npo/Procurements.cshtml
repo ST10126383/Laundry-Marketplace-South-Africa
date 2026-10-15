@@ -1,0 +1,51 @@
+@model IEnumerable<LaundryMarketplace.Core.Entities.UniformProcurement>
+@{
+    ViewData["Title"] = "Uniform Procurements";
+}
+
+<h2 class="mb-3">Uniform Procurements</h2>
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success">@TempData["Success"]</div>
+}
+
+<a class="btn btn-success mb-3" asp-action="CreateProcurement">+ New Procurement</a>
+<a class="btn btn-outline-secondary mb-3" asp-action="Index">← Dashboard</a>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info">No procurements yet.</div>
+}
+else
+{
+    <div class="table-responsive">
+        <table class="table table-hover">
+            <thead class="table-light">
+                <tr>
+                    <th>#</th>
+                    <th>Date</th>
+                    <th>Supplier</th>
+                    <th>Quantity</th>
+                    <th>Unit Cost</th>
+                    <th>Total Cost</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var p in Model)
+                {
+                    <tr>
+                        <td>@p.ProcurementId</td>
+                        <td>@p.CreatedAt.ToLocalTime().ToString("dd MMM yyyy")</td>
+                        <td>@p.SupplierName</td>
+                        <td>@p.UniformQuantity</td>
+                        <td>R @p.UnitCost.ToString("N2")</td>
+                        <td>R @p.TotalCost.ToString("N2")</td>
+                        <td><span class="badge bg-secondary">@p.Status</span></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}

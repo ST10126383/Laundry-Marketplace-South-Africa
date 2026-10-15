@@ -1,0 +1,78 @@
+@{
+    ViewData["Title"] = "Home";
+}
+
+<div class="text-center mb-5">
+    <h1 class="display-5 fw-bold text-primary">Laundry Marketplace South Africa</h1>
+    <p class="lead">Clean clothes. Restored dignity. One platform.</p>
+    <p class="text-muted">Commercial laundry services that fund the True People's Dignity Foundation</p>
+</div>
+
+<div class="row g-4 mb-5" id="impact">
+    <div class="col-md-3">
+        <div class="card text-center h-100 border-primary">
+            <div class="card-body">
+                <h3 class="text-primary">@ViewBag.TotalDonations</h3>
+                <p class="mb-0">Clothing Donations</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-center h-100 border-success">
+            <div class="card-body">
+                <h3 class="text-success">@($"{ViewBag.TotalWeightKg:N1}") kg</h3>
+                <p class="mb-0">Clothes Recycled</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-center h-100 border-info">
+            <div class="card-body">
+                <h3 class="text-info">@ViewBag.UniformsProcured</h3>
+                <p class="mb-0">Uniforms Procured</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-center h-100 border-warning">
+            <div class="card-body">
+                <h3 class="text-warning">R @($"{ViewBag.TotalFundsAllocated:N2}")</h3>
+                <p class="mb-0">NPO Funds Allocated</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4">
+    <div class="col-md-6">
+        <div class="card h-100">
+            <div class="card-header bg-primary text-white">Commercial Engine</div>
+            <div class="card-body">
+                <ul>
+                    <li>Book laundry pickup &amp; delivery</li>
+                    <li>Track your order in real time</li>
+                    <li>Secure online payments</li>
+                    <li>Support local laundromats in Gauteng</li>
+                </ul>
+                @if (User.Identity?.IsAuthenticated != true)
+                {
+                    <a class="btn btn-primary" asp-controller="Account" asp-action="Register">Get Started</a>
+                }
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card h-100">
+            <div class="card-header bg-success text-white">Social Impact</div>
+            <div class="card-body">
+                <ul>
+                    <li>Donate clothing with your laundry order</li>
+                    <li>10% of platform revenue funds the NPO</li>
+                    <li>New school uniforms for children in need</li>
+                    <li>Transparent impact dashboard</li>
+                </ul>
+                <a class="btn btn-success" href="#impact">View Impact</a>
+            </div>
+        </div>
+    </div>
+</div>

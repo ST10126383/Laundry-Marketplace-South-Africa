@@ -1,0 +1,86 @@
+@model IEnumerable<LaundryMarketplace.Core.Entities.Order>
+@{
+    ViewData["Title"] = "Laundromat Orders";
+}
+
+<h2 class="mb-4">Laundromat Order Management</h2>
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success">@TempData["Success"]</div>
+}
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">@TempData["Error"]</div>
+}
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info">No orders available.</div>
+}
+else
+{
+    <div class="table-responsive">
+        <table class="table table-hover align-middle">
+            <thead class="table-light">
+                <tr>
+                    <th>Order #</th>
+                    <th>Date</th>
+                    <th>Items</th>
+                    <th>Total</th>
+                    <th>Donation</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var o in Model)
+                {
+                    <tr>
+                        <td>#@o.OrderId</td>
+                        <td>@o.OrderDate.ToLocalTime().ToString("dd MMM HH:mm")</td>
+                        <td>@string.Join(", ", o.OrderItems.Select(i => i.ServiceType))</td>
+                        <td>R @o.TotalAmount.ToString("N2")</td>
+                        <td>
+                            @if (o.Donation != null)
+                            {
+                                <span class="badge bg-success">@o.Donation.WeightKg kg</span>
+                            }
+                            else
+                            {
+                                <span class="text-muted">—</span>
+                            }
+                        </td>
+                        <td>
+                            <span class="badge bg-primary">@o.OrderStatus</span>
+                        </td>
+                        <td>
+                            @if (o.OrderStatus == OrderStatus.Pending && o.LaundromatId == null)
+                            {
+                                <form asp-action="AcceptOrder" method="post" class="d-inline">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="orderId" value="@o.OrderId" />
+                                    <button type="submit" class="btn btn-sm btn-success">Accept</button>
+                                </form>
+                            }
+                            else
+                            {
+                                <form asp-action="UpdateStatus" method="post" class="d-inline">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="orderId" value="@o.OrderId" />
+                                    <select name="newStatus" class="form-select form-select-sm d-inline-block w-auto" onchange="this.form.submit()">
+                                        @foreach (OrderStatus s in Enum.GetValues(typeof(OrderStatus)))
+                                        {
+                                            if (s == OrderStatus.Cancelled) continue;
+                                            <option value="@s" selected="@(o.OrderStatus == s)">@s</option>
+                                        }
+                                    </select>
+                                </form>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}

@@ -1,0 +1,42 @@
+@model IEnumerable<LaundryMarketplace.Core.Entities.NpoFundLedger>
+@{
+    ViewData["Title"] = "NPO Fund Ledger";
+}
+
+<h2 class="mb-3">NPO Fund Ledger</h2>
+<p class="lead">Current Balance: <strong class="text-success">R @(((decimal)ViewBag.Balance).ToString("N2"))</strong></p>
+
+<a class="btn btn-outline-secondary mb-3" asp-action="Index">← Back to Dashboard</a>
+
+<div class="table-responsive">
+    <table class="table table-hover">
+        <thead class="table-light">
+            <tr>
+                <th>#</th>
+                <th>Date</th>
+                <th>Type</th>
+                <th>Amount</th>
+                <th>Balance After</th>
+                <th>Order / Donation</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var e in Model)
+            {
+                <tr>
+                    <td>@e.LedgerId</td>
+                    <td>@e.TransactionDate.ToLocalTime().ToString("dd MMM yyyy HH:mm")</td>
+                    <td><span class="badge bg-@(e.TransactionType == "Allocation" ? "success" : "warning")">@e.TransactionType</span></td>
+                    <td class="@(e.AllocationAmount >= 0 ? "text-success" : "text-danger")">R @e.AllocationAmount.ToString("N2")</td>
+                    <td>R @e.BalanceAfter.ToString("N2")</td>
+                    <td>
+                        @if (e.OrderId.HasValue) { <span>Order #@e.OrderId</span> }
+                        @if (e.DonationId.HasValue) { <span>Donation #@e.DonationId</span> }
+                    </td>
+                    <td>@e.Description</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

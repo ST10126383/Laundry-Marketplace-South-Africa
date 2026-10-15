@@ -1,0 +1,60 @@
+@model IEnumerable<LaundryMarketplace.Core.Entities.Order>
+@{
+    ViewData["Title"] = "My Orders";
+}
+
+<h2 class="mb-4">My Orders</h2>
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success">@TempData["Success"]</div>
+}
+
+<p>
+    <a class="btn btn-primary" asp-action="Book">+ Book New Laundry</a>
+</p>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info">You have no orders yet. Book your first laundry service!</div>
+}
+else
+{
+    <div class="table-responsive">
+        <table class="table table-hover align-middle">
+            <thead class="table-light">
+                <tr>
+                    <th>Order #</th>
+                    <th>Date</th>
+                    <th>Total</th>
+                    <th>NPO Allocation</th>
+                    <th>Status</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var o in Model)
+                {
+                    <tr>
+                        <td>#@o.OrderId</td>
+                        <td>@o.OrderDate.ToLocalTime().ToString("dd MMM yyyy HH:mm")</td>
+                        <td>R @o.TotalAmount.ToString("N2")</td>
+                        <td class="text-success">R @o.NpoAllocationAmount.ToString("N2")</td>
+                        <td>
+                            <span class="badge bg-@(o.OrderStatus switch {
+                                OrderStatus.Pending => "secondary",
+                                OrderStatus.Delivered => "success",
+                                OrderStatus.Cancelled => "danger",
+                                _ => "primary"
+                            })">@o.OrderStatus</span>
+                        </td>
+                        <td>
+                            <a class="btn btn-sm btn-outline-primary" asp-action="Details" asp-route-id="@o.OrderId">View</a>
+                            <a class="btn btn-sm btn-outline-secondary" asp-action="Track" asp-route-id="@o.OrderId">Track</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
